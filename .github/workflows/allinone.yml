@@ -8,7 +8,7 @@ on:
       dockerhub_image:
         description: '要拉取的 DockerHub 镜像名称'
         required: true
-        default: 'nginx'
+        default: 'youshandefeiyang/allinone'
       tag:
         description: 'Docker 镜像标签（默认：latest）'
         required: false
@@ -16,7 +16,7 @@ on:
       ghcr_image:
         description: '推送到GHCR.IO的镜像名称'
         required: true
-        default: 'myimage'
+        default: 'allinone'
   schedule:
     # 每小时运行一次 (UTC时间)
     - cron: '0 * * * *'
