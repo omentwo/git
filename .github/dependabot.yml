@@ -1,0 +1,19 @@
+version: 2
+updates:
+  # 自动更新 GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"  # 检查根目录下的 Actions 配置
+    schedule:
+      interval: "weekly" 
+
+  # 自动更新 npm 依赖（如果有 package.json）
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # 自动更新 Python 依赖（如果有 requirements.txt）
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
