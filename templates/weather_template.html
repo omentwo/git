@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气预报</title> <!-- 标题可以更通用，因为城市名会动态填充 -->
+    <style>
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff; /* 淡蓝色背景 */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .weather-container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px; /* 最大宽度 */
+            box-sizing: border-box;
+        }
+
+        .header-info {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 20px;
+        }
+
+        .header-info h1 {
+            margin: 0 0 10px 0;
+            color: #2c3e50; /* 深蓝灰色 */
+            font-size: 2.2em;
+        }
+
+        .header-info p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 响应式列 */
+            gap: 20px; /* 卡片间距 */
+        }
+
+        .forecast-card {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .forecast-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .forecast-card h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #3498db; /* 蓝色 */
+            font-size: 1.4em;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 10px;
+        }
+        
+        .forecast-card .date {
+            font-weight: bold;
+        }
+
+        .forecast-card .weekday {
+            font-style: italic;
+            color: #7f8c8d; /* 灰石色 */
+        }
+
+        .weather-details {
+            margin-top: 10px;
+        }
+
+        .weather-details p {
+            margin: 8px 0;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .weather-details strong {
+            color: #333;
+            min-width: 70px; /* 对齐标签 */
+            display: inline-block;
+        }
+
+        .temp-highlight {
+            font-weight: bold;
+            color: #e74c3c; /* 红色突出温度 */
+        }
+
+        .weather-icon { /* 预留给天气图标的位置 */
+            font-size: 1.8em; /* 示例大小 */
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8em;
+            color: #777;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 600px) {
+            .weather-container {
+                padding: 15px;
+            }
+            .header-info h1 {
+                font-size: 1.8em;
+            }
+            .forecast-card {
+                padding: 15px;
+            }
+            .forecast-card h2 {
+                font-size: 1.2em;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="weather-container">
+        <div class="header-info">
+            <!-- 数据将从JSON动态填充 -->
+            <h1 id="city-name">天气预报</h1> <!-- 城市名会由JS填充 -->
+            <p>省份：<span id="province"></span></p> <!-- 省份会由JS填充 -->
+            <p>数据更新时间：<span id="report-time"></span></p> <!-- 更新时间会由JS填充 -->
+        </div>
+
+        <div class="forecast-grid" id="forecast-grid-content">
+            <!-- 天气卡片将在这里动态生成 -->
+            <!-- 初始时这里可以是空的，或者保留一些占位符结构，但JS会清空并重新填充 -->
+            <!-- 例如，可以留一个加载提示：
+            <p style="text-align: center; color: #777;">正在加载天气数据...</p>
+            -->
+        </div>
+
+        <div class="footer">
+            <p>天气数据仅供参考</p>
+        </div>
+    </div>
+
+    <script>
+        // 实际的天气数据将通过替换下面的占位符被注入进来
+        const weatherData = /* WEATHER_DATA_PLACEHOLDER */;
+
+        // 辅助函数：将数字星期转换为中文
+        function getWeekday(weekNumberStr) {
+            const weekNumber = parseInt(weekNumberStr);
+            // API的week: 1=周一, 2=周二, ..., 7=周日
+            // 我们需要适配Date对象的getDay() (0=周日, 1=周一, ..., 6=周六)
+            // 或者直接用一个映射
+            const weekdays = ["一", "二", "三", "四", "五", "六", "日"];
+            if (weekNumber >= 1 && weekNumber <= 7) {
+                return "星期" + weekdays[weekNumber - 1];
+            }
+            return "星期未知";
+        }
+        
+        // 辅助函数：根据天气文本选择一个简单的Emoji图标 (实际应用中建议使用天气图标库)
+        function getWeatherIcon(weatherText) {
+            if (!weatherText) return "🌡️"; // 默认以防weatherText为空
+            if (weatherText.includes("晴")) return "☀️";
+            if (weatherText.includes("多云")) return "☁️";
+            if (weatherText.includes("阴")) return "🌥️";
+            if (weatherText.includes("雨")) {
+                if (weatherText.includes("雷")) return "⛈️";
+                if (weatherText.includes("雪")) return "🌨️"; // 雨夹雪
+                return "🌧️";
+            }
+            if (weatherText.includes("雪")) return "❄️";
+            if (weatherText.includes("雾")) return "🌫️";
+            if (weatherText.includes("风") || weatherText.includes("霾")) return "🌬️";
+            return "🌡️"; // 默认
+        }
+
+        // 动态填充数据
+        document.addEventListener('DOMContentLoaded', function() {
+            // 确保weatherData已经被成功注入并且是有效的
+            if (typeof weatherData !== 'object' || weatherData === null || !weatherData.forecasts || weatherData.forecasts.length === 0) {
+                console.error("天气数据无效或未加载:", weatherData);
+                document.getElementById('forecast-grid-content').innerHTML = '<p style="text-align: center; color: red;">天气数据加载失败或格式错误。</p>';
+                document.getElementById('city-name').textContent = "天气数据错误";
+                return;
+            }
+
+            const forecastInfo = weatherData.forecasts[0];
+
+            document.getElementById('city-name').textContent = `${forecastInfo.city} 天气预报`;
+            document.getElementById('province').textContent = forecastInfo.province;
+            document.getElementById('report-time').textContent = forecastInfo.reporttime;
+
+            const forecastGrid = document.getElementById('forecast-grid-content');
+            forecastGrid.innerHTML = ''; // 清空任何占位内容
+
+            if (!forecastInfo.casts || forecastInfo.casts.length === 0) {
+                forecastGrid.innerHTML = '<p style="text-align: center; color: #777;">暂无详细预报数据。</p>';
+                return;
+            }
+
+            forecastInfo.casts.forEach(cast => {
+                const card = document.createElement('div');
+                card.classList.add('forecast-card');
+
+                card.innerHTML = `
+                    <h2><span class="date">${cast.date}</span> (<span class="weekday">${getWeekday(cast.week)}</span>)</h2>
+                    <div class="weather-details">
+                        <p><span class="weather-icon">${getWeatherIcon(cast.dayweather)}</span><strong>白天：</strong>${cast.dayweather}, <span class="temp-highlight">${cast.daytemp}°C</span>, ${cast.daywind}风 ${cast.daypower}级</p>
+                        <p><span class="weather-icon">${getWeatherIcon(cast.nightweather)}</span><strong>夜晚：</strong>${cast.nightweather}, <span class="temp-highlight">${cast.nighttemp}°C</span>, ${cast.nightwind}风 ${cast.nightpower}级</p>
+                    </div>
+                `;
+                forecastGrid.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>
