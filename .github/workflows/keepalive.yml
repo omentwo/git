@@ -1,0 +1,14 @@
+name: 100% 可靠的仓库保活方案
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天一次，强制保活
+  workflow_dispatch:      # 可选：允许手动触发
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          git commit --allow-empty -m "💚 心跳提交：保持仓库活跃"
+          git push
