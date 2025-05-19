@@ -39,7 +39,7 @@ jobs:
           
           # 创建空提交
           git commit --allow-empty \
-            -m "chore: keep-alive at ${commit_time} [skip ci]" \
+            -m "chore:🚀🏷️ keep-alive at ${commit_time} [skip ci]" \
             --author="omentwo <omentwo@users.noreply.github.com>"
 
       - name: Push with Retry
