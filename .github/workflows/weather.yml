@@ -1,4 +1,4 @@
-name: Daily Weather Data Collector
+name: Advanced Weather Data Collector
 
 on:
   schedule:
@@ -15,6 +15,7 @@ jobs:
       TZ: Asia/Shanghai
 
     steps:
+      # ---------- 基础步骤 ---------- 
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -26,16 +27,47 @@ jobs:
       - name: Install dependencies
         run: npm install axios
 
+      # ---------- 核心数据获取 ----------
       - name: Run weather script
+        id: get-weather
         env:
-          AMAP_KEY: ${{ secrets.AMAP_KEY }}        # 高德API密钥
-          CITY_ADDRESS: "海南省海口市琼山区"        # 你的城市地址
-        run: node weather.js
+          AMAP_KEY: ${{ secrets.AMAP_KEY }}
+          CITY_ADDRESS: "海南省海口市琼山区"
+        run: |
+          node weather.js
+          # 生成数据存在性标记
+          echo "WEATHER_FILE=$(ls weather-data/$(date +'%Y-%m-%d').json)" >> $GITHUB_OUTPUT
 
+      # ---------- 数据校验 ----------
+      - name: Validate data
+        if: steps.get-weather.outputs.WEATHER_FILE == ''
+        run: |
+          echo "❌ 未检测到今日天气数据文件"
+          exit 1
+
+      # ---------- 提交天气数据 ----------
       - name: Commit weather data
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add weather-data/
-          git commit -m "🌤️ 更新天气数据 $(date +'%Y-%m-%d %H:%M CST')"
+          git commit -m "🌤️ 更新天气数据 $(date +'%Y-%m-%d %H:%M CST')" 
           git push
+
+      # ---------- 自动清理旧数据 ----------
+      - name: Clean old data
+        run: |
+          # 删除30天前的数据
+          find weather-data/ -name "*.json" -mtime +30 -exec rm -v {} \;
+          
+          # 提交清理结果
+          git add weather-data/
+          git commit -m "🗑️ 清理30天前天气数据" && git push || echo "没有需要清理的文件"
+
+      # ---------- 数据可视化（需自定义模板） ----------
+      - name: Generate visualization
+        run: |
+          # 在此处添加生成可视化HTML的脚本（示例）
+          echo "📊 可视化功能待实现" > weather-report.html
+          git add weather-report.html
+          git commit -m "📈 更新天气可视化报告" && git push || echo "无需更新报告"
