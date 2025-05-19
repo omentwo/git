@@ -34,6 +34,13 @@ jobs:
           AMAP_KEY: ${{ secrets.AMAP_KEY }}
           CITY_ADDRESS: "海南省海口市琼山区"
         run: |          
+          echo "--- Debug Information Start ---"
+          echo "GitHub Workspace: ${{ github.workspace }}"
+          echo "Current Directory (pwd): $(pwd)"
+          echo "Listing all files and directories in current directory (ls -Rla):"
+          ls -Rla  # 递归列出所有文件和目录，包括子目录
+          echo "--- Debug Information End ---"
+          
           node weather.js
           
           # 检查当天的数据文件是否已生成
