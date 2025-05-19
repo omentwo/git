@@ -18,7 +18,7 @@ on:
         required: true
         default: 'allinone'
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 0/6 * * *'
     # 如需时区支持，取消注释下一行
     # timezone: 'Asia/Shanghai'
 
