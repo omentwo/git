@@ -7,7 +7,7 @@ on:
     branches:
       - main # Or your default branch where weather-report.html is committed
     paths:
-      - 'weather-report.html' # Only trigger if weather-report.html changes
+      - './weather-report.html' # Only trigger if weather-report.html changes
   workflow_dispatch: # Allows manual triggering
 
 permissions:
