@@ -63,7 +63,7 @@ jobs:
         if: steps.get-weather.outputs.WEATHER_FILE_EXISTS == 'true' # 确保文件存在才提交
         run: |
           git config --global user.name "omentwo"
-          git config --global user.email "omentwo]@users.noreply.github.com"
+          git config --global user.email "omentwo@users.noreply.github.com"
           git add weather-data/
           # 检查是否有实际更改需要提交
           if git diff --staged --quiet; then
@@ -117,8 +117,8 @@ jobs:
           find weather-data/ -name "*.json" -mtime +30 -print -delete
           
           # 提交清理结果 (仅当有文件被删除时)
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "omentwo"
+          git config --global user.email "omentwo@users.noreply.github.com"
           git add weather-data/ # Stage 任何因删除而产生的变更
           if git diff --staged --quiet; then
             echo "ℹ️ No old weather data files were deleted, no cleanup commit needed."
