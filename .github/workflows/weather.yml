@@ -36,9 +36,9 @@ jobs:
           AMAP_KEY: ${{ secrets.AMAP_KEY }}
           CITY_ADDRESS: "海南省海口市琼山区"
         run: |
-          
           node ./weather.js
           
+          # 检查当天的数据文件是否已生成
           TODAY_DATE=$(date +'%Y-%m-%d')
           WEATHER_FILE_PATH="weather-data/${TODAY_DATE}.json"
           if [ -f "$WEATHER_FILE_PATH" ]; then
