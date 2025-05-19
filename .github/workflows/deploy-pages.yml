@@ -1,0 +1,49 @@
+# .github/workflows/deploy-pages.yml
+
+name: Deploy Weather Report to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Or your default branch where weather-report.html is committed
+    paths:
+      - 'weather-report.html' # Only trigger if weather-report.html changes
+  workflow_dispatch: # Allows manual triggering
+
+permissions:
+  contents: read    # Needs to read the content of the repository (weather-report.html)
+  pages: write      # Needs to write to GitHub Pages
+  id-token: write   # Needs to authenticate for GitHub Pages deployment
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }} # Will show the deployed page URL
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        # This step checks out the code, including the weather-report.html
+        # that was committed by your other workflow.
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+        # This action configures the GitHub Pages environment.
+        # For simple cases, it might not need specific 'with' inputs.
+
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Path to the static files to deploy.
+          # Since weather-report.html is at the root after checkout, '.' is appropriate.
+          # If your report had other assets (CSS, JS, images) in a folder,
+          # you'd adjust this path or ensure they are included.
+          path: '.' # This will pick up weather-report.html from the root
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        # This action deploys the artifact uploaded in the previous step.
