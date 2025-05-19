@@ -62,8 +62,8 @@ jobs:
       - name: Commit weather data
         if: steps.get-weather.outputs.WEATHER_FILE_EXISTS == 'true' # 确保文件存在才提交
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "omentwo"
+          git config --global user.email "omentwo]@users.noreply.github.com"
           git add weather-data/
           # 检查是否有实际更改需要提交
           if git diff --staged --quiet; then
@@ -97,8 +97,8 @@ jobs:
         # if: steps.generate-html-report.outputs.REPORT_GENERATED == 'true' # 可选：仅当报告确实生成时提交
         # 但即使是错误报告，我们也希望提交，所以不加这个 if
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "omentwo"
+          git config --global user.email "omentwo@users.noreply.github.com"
           git add weather-report.html
           # 检查是否有实际更改需要提交
           if git diff --staged --quiet; then
