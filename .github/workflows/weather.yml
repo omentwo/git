@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write # 需要写入权限来提交文件
+  pages: write    # <<< ADDED: Needed to deploy to GitHub Pages
+  id-token: write # <<< ADDED: Needed for OIDC token for GitHub Pages deployment
 
 jobs:
   collect-weather:
@@ -127,3 +129,53 @@ jobs:
             git push
             echo "✅ Cleanup of old data committed."
           fi
+      # ---------- 上传 GitHub Pages 构建产物 (这是对 collect-weather job 的一个小补充) ----------
+      - name: Upload Pages artifact (weather-report.html)
+        if: steps.generate-html-report.outputs.REPORT_GENERATED == 'true' # 确保报告生成了才上传
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-pages # 标准名称，deploy-pages job 会使用这个
+          path: weather-report.html # 上传 weather-report.html 文件
+          retention-days: 1 # 产物保留1天，因为部署后就不再需要了
+
+  # ---------- 新增：部署到 GitHub Pages 的 Job ----------
+  deploy-pages:
+    needs: collect-weather # 依赖 collect-weather job 完成
+    runs-on: ubuntu-latest
+
+    # 定义 GitHub Pages 的部署环境 (可选，但推荐)
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }} # Action 会输出部署后的 URL
+
+    # 此 Job 的权限已在 workflow 级别设置 (pages: write, id-token: write)
+    # 如果没有在 workflow 级别设置，则需要在这里单独为 job 设置:
+    # permissions:
+    #   pages: write
+    #   id-token: write
+
+    steps:
+      - name: Download artifact from collect-weather job
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          # path: . # 默认下载到当前工作目录的根目录，weather-report.html 会在根目录
+
+      - name: Setup Pages
+        id: pages # 给步骤ID以备后续使用
+        uses: actions/configure-pages@v4
+        # 此 action 可以配置自定义域名等，如果不需要则无需额外 with 参数
+
+      - name: Upload artifact for GitHub Pages deployment
+        uses: actions/upload-pages-artifact@v3 # 注意是 upload-pages-artifact
+        with:
+          # 上传整个工作目录 (其中包含了下载下来的 weather-report.html)
+          # 如果你的 weather-report.html 需要其他 css/js/image 资源，且这些资源与 report 在同一目录或子目录，
+          # 确保它们也被正确下载或存在于上传的路径中。
+          # 当前假设 weather-report.html 是自包含的，或者它的相对路径资源在上传时也存在。
+          path: '.' # 当前工作目录，其中应包含 weather-report.html
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        # 此 action 会自动找到名为 'github-pages' 的环境和由 upload-pages-artifact 准备的产物
