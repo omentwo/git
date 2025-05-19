@@ -25,8 +25,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config user.name "WindyDante"
-          git config user.email "WindyDante@users.noreply.github.com"
+          git config user.name "omentwo"
+          git config user.email "omentwo@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
       - name: Sync and Commit
@@ -40,7 +40,7 @@ jobs:
           # 创建空提交
           git commit --allow-empty \
             -m "chore: keep-alive at ${commit_time} [skip ci]" \
-            --author="WindyDante <WindyDante@users.noreply.github.com>"
+            --author="omentwo <omentwo@users.noreply.github.com>"
 
       - name: Push with Retry
         run: |
