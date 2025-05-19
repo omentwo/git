@@ -40,7 +40,9 @@ jobs:
           echo "Listing all files and directories in current directory (ls -Rla):"
           ls -Rla  # 递归列出所有文件和目录，包括子目录
           echo "--- Debug Information End ---"
+          
           node weather.js
+          
           # 检查当天的数据文件是否已生成
           TODAY_DATE=$(date +'%Y-%m-%d')
           WEATHER_FILE_PATH="weather-data/${TODAY_DATE}.json"
