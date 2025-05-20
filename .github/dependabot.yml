@@ -1,6 +1,0 @@
-version: 2
-updates:
-  - package-ecosystem: "github-actions"  # 专门更新 GitHub Actions
-    directory: "/.github/workflows"      # 监控 workflows 目录下的 Action 版本
-    schedule:
-      interval: "daily"                  # 每天检查一次更新
