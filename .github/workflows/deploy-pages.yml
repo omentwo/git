@@ -9,8 +9,9 @@ on:
     paths:
       - './weather-report.html' # Only trigger if weather-report.html changes
   workflow_dispatch: # Allows manual triggering
-  
-  schedule:
+    # 这里 workflow_dispatch 结束了，没有任何子项
+
+  schedule: # schedule 与 push 和 workflow_dispatch 平级
     # CRON 语法：分钟 小时 日 月 星期几
     # '1 0 * * *' 表示每天的 UTC 时间 00:01 运行
     # 这对应北京/上海时间 (UTC+8) 的早上 8:01
