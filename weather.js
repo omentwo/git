@@ -10,7 +10,7 @@ async function getCity() {
     key: AMAP_KEY,
     address: CITY_ADDRESS,
   };
-  const res = await axios.get('https://restapi.amap.com/v3/geocode/geo', { params });
+  let res = await axios.get('https://restapi.amap.com/v3/geocode/geo', { params });
   return res.data.geocodes[0].adcode;
 }
 
