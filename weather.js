@@ -22,7 +22,7 @@ async function getWeather() {
       city: adcode,
       extensions: 'all',
     };
-    const res = await axios.get('https://restapi.amap.com/v3/weather/weatherInfo', { params });
+    let res = await axios.get('https://restapi.amap.com/v3/weather/weatherInfo', { params });
     
     // 生成带日期的文件名
     const date = new Date().toISOString().split('T')[0];
