@@ -1,0 +1,72 @@
+{
+  "status": "1",
+  "count": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "forecasts": [
+    {
+      "city": "琼山区",
+      "adcode": "460107",
+      "province": "海南",
+      "reporttime": "2025-08-16 09:32:21",
+      "casts": [
+        {
+          "date": "2025-08-16",
+          "week": "6",
+          "dayweather": "雷阵雨",
+          "nightweather": "暴雨",
+          "daytemp": "29",
+          "nighttemp": "25",
+          "daywind": "东",
+          "nightwind": "东",
+          "daypower": "1-3",
+          "nightpower": "1-3",
+          "daytemp_float": "29.0",
+          "nighttemp_float": "25.0"
+        },
+        {
+          "date": "2025-08-17",
+          "week": "7",
+          "dayweather": "雷阵雨",
+          "nightweather": "雷阵雨",
+          "daytemp": "28",
+          "nighttemp": "24",
+          "daywind": "北",
+          "nightwind": "北",
+          "daypower": "1-3",
+          "nightpower": "1-3",
+          "daytemp_float": "28.0",
+          "nighttemp_float": "24.0"
+        },
+        {
+          "date": "2025-08-18",
+          "week": "1",
+          "dayweather": "雷阵雨",
+          "nightweather": "小雨",
+          "daytemp": "31",
+          "nighttemp": "24",
+          "daywind": "北",
+          "nightwind": "北",
+          "daypower": "1-3",
+          "nightpower": "1-3",
+          "daytemp_float": "31.0",
+          "nighttemp_float": "24.0"
+        },
+        {
+          "date": "2025-08-19",
+          "week": "2",
+          "dayweather": "暴雨",
+          "nightweather": "多云",
+          "daytemp": "33",
+          "nighttemp": "25",
+          "daywind": "北",
+          "nightwind": "北",
+          "daypower": "1-3",
+          "nightpower": "1-3",
+          "daytemp_float": "33.0",
+          "nighttemp_float": "25.0"
+        }
+      ]
+    }
+  ]
+}
