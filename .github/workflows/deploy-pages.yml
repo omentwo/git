@@ -1,56 +1,66 @@
-# .github/workflows/deploy-pages.yml
-
 name: Deploy Weather Report to GitHub Pages
 
 on:
+  # 天气工作流完成后启动
+  workflow_run:
+    workflows:
+      - Advanced Weather Data Collector
+    types:
+      - completed
+    branches:
+      - main
+
+  # 保留：人工直接修改报告时也能部署
   push:
     branches:
-      - main # Or your default branch where weather-report.html is committed
+      - main
     paths:
-      - './weather-report.html' # Only trigger if weather-report.html changes
-  workflow_dispatch: # Allows manual triggering
-    # 这里 workflow_dispatch 结束了，没有任何子项
+      - weather-report.html
 
-  schedule: # schedule 与 push 和 workflow_dispatch 平级
-    # CRON 语法：分钟 小时 日 月 星期几
-    # '1 0 * * *' 表示每天的 UTC 时间 00:01 运行
-    # 这对应北京/上海时间 (UTC+8) 的早上 8:01
-    - cron: '1 0 * * *'
+  # 保留手动部署入口
+  workflow_dispatch:
 
 permissions:
-  contents: read    # Needs to read the content of the repository (weather-report.html)
-  pages: write      # Needs to write to GitHub Pages
-  id-token: write   # Needs to authenticate for GitHub Pages deployment
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
 
 jobs:
   deploy:
+    # workflow_run 仅在天气任务成功时部署；
+    # push 和手动触发则直接部署
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+
     runs-on: ubuntu-latest
+
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }} # Will show the deployed page URL
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout latest main
         uses: actions/checkout@v4
-        # This step checks out the code, including the weather-report.html
-        # that was committed by your other workflow.
+        with:
+          ref: main
+
+      - name: Prepare Pages site
+        run: |
+          test -f weather-report.html
+          mkdir -p site
+          cp weather-report.html site/weather-report.html
 
       - name: Setup Pages
-        id: pages
         uses: actions/configure-pages@v4
-        # This action configures the GitHub Pages environment.
-        # For simple cases, it might not need specific 'with' inputs.
 
-      - name: Upload artifact for GitHub Pages
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Path to the static files to deploy.
-          # Since weather-report.html is at the root after checkout, '.' is appropriate.
-          # If your report had other assets (CSS, JS, images) in a folder,
-          # you'd adjust this path or ensure they are included.
-          path: '.' # This will pick up weather-report.html from the root
+          path: site
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        # This action deploys the artifact uploaded in the previous step.
