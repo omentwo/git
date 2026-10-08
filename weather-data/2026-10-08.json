@@ -1,0 +1,72 @@
+{
+  "status": "1",
+  "count": "1",
+  "info": "OK",
+  "infocode": "10000",
+  "forecasts": [
+    {
+      "city": "龙华区",
+      "adcode": "460106",
+      "province": "海南",
+      "reporttime": "2026-10-08 14:34:20",
+      "casts": [
+        {
+          "date": "2026-10-08",
+          "week": "4",
+          "dayweather": "大雨",
+          "nightweather": "大雨",
+          "daytemp": "28",
+          "nighttemp": "23",
+          "daywind": "东",
+          "nightwind": "东",
+          "daypower": "1-3",
+          "nightpower": "1-3",
+          "daytemp_float": "28.0",
+          "nighttemp_float": "23.0"
+        },
+        {
+          "date": "2026-10-09",
+          "week": "5",
+          "dayweather": "大雨",
+          "nightweather": "多云",
+          "daytemp": "26",
+          "nighttemp": "23",
+          "daywind": "北",
+          "nightwind": "北",
+          "daypower": "1-3",
+          "nightpower": "1-3",
+          "daytemp_float": "26.0",
+          "nighttemp_float": "23.0"
+        },
+        {
+          "date": "2026-10-10",
+          "week": "6",
+          "dayweather": "多云",
+          "nightweather": "多云",
+          "daytemp": "29",
+          "nighttemp": "24",
+          "daywind": "东",
+          "nightwind": "东",
+          "daypower": "1-3",
+          "nightpower": "1-3",
+          "daytemp_float": "29.0",
+          "nighttemp_float": "24.0"
+        },
+        {
+          "date": "2026-10-11",
+          "week": "7",
+          "dayweather": "阴",
+          "nightweather": "多云",
+          "daytemp": "30",
+          "nighttemp": "26",
+          "daywind": "东",
+          "nightwind": "东",
+          "daypower": "1-3",
+          "nightpower": "1-3",
+          "daytemp_float": "30.0",
+          "nighttemp_float": "26.0"
+        }
+      ]
+    }
+  ]
+}
